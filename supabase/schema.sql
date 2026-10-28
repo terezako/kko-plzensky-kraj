@@ -47,6 +47,12 @@ create policy "Authenticated admins can read KKO responses"
   on public.responses for select to authenticated
   using (private.is_kko_admin());
 
+drop policy if exists "Authenticated admins can delete KKO responses" on public.responses;
+create policy "Authenticated admins can delete KKO responses"
+  on public.responses for delete to authenticated
+  using ((select private.is_kko_admin()));
+
 grant usage on schema public to anon, authenticated;
+revoke all on table public.responses from anon, authenticated;
 grant insert on public.responses to anon;
-grant select on public.responses to authenticated;
+grant select, delete on public.responses to authenticated;
